@@ -10,7 +10,7 @@
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/ssr-component-error",
+        "outputPath": "dist/ssr-component-error/browser",
         "index": "./src/index.html",
         "main": "./src/main.ts",
         "polyfills": ["zone.js"],
@@ -90,6 +90,59 @@
       "options": {
         "buildTarget": "ssr-component-error:build"
       }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@angular-devkit/build-angular:server",
+      "options": {
+        "outputPath": "dist/ssr-component-error/server",
+        "main": "server.ts",
+        "tsConfig": "tsconfig.server.json"
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "ssr-component-error:build:development",
+          "serverTarget": "ssr-component-error:server:development"
+        },
+        "production": {
+          "browserTarget": "ssr-component-error:build:production",
+          "serverTarget": "ssr-component-error:server:production"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "ssr-component-error:build:development",
+          "serverTarget": "ssr-component-error:server:development"
+        },
+        "production": {
+          "browserTarget": "ssr-component-error:build:production",
+          "serverTarget": "ssr-component-error:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
     }
   }
 }
